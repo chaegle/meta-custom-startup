@@ -1,0 +1,94 @@
+This README file contains information on the contents of the
+custom-startup layer.
+
+Please see the corresponding sections below for details.
+
+
+Dependencies
+============
+
+This layer depends on:
+
+  URI: git://git.openembedded.org/bitbake
+  branch: master
+
+  URI: git://git.openembedded.org/openembedded-core
+  layers: meta
+  branch: master
+
+  URI: git://git.yoctoproject.org/xxxx
+  layers: xxxx
+  branch: master
+
+
+Patches
+=======
+
+Please submit any patches against the custom-startup layer to the maintainer:
+
+Maintainer: Cameron Haegle <cameron.haegle@digi.com>
+
+
+Table of Contents
+=================
+
+  I. Adding the custom-startup layer to your build
+ II. Misc
+
+
+I. Adding the custom-startup layer to your build
+=================================================
+
+
+In order to use this layer, you need to make the build system aware of
+it.
+
+Assuming the custom-startup layer exists at the top-level of your
+yocto build tree, you can add it to the build system by adding the
+location of the custom-startup layer to bblayers.conf, along with any
+other layers needed. e.g.:
+
+  BBLAYERS ?= " \
+    /path/to/yocto/meta \
+    /path/to/yocto/meta-poky \
+    /path/to/yocto/meta-yocto-bsp \
+    /path/to/yocto/meta-custom-startup \
+    "
+
+To add the example 'simpleserver' to a project add the following line to the project's
+conf/local.conf file.
+
+IMAGE_INSTALL_append = " simpleserver"
+
+
+II. Misc
+========
+
+This layer demonstrates how to add new service, as well as, customize the init scripts of
+applications/services, via the Yocto recipes.
+
+This layer appends the dropbear, NetworkManager and Bluetooth (BlueZ) recipes so that they 
+do NOT get started at boot in run levels 3, 4 & 5.
+
+Within these bbappend files a couple of method for conditionally implementing the change(s)
+have been implemented.
+
+- In the BlueTooth and DropBear bbappend files a @base_conditional comparison is made. If TRUE
+  the service is not installed in run levels 3, 4 & 5. 
+   - The 'problem' in using this method, is that one must define a FALSE condition. Failing to do 
+     so will result on the specified service script not being installed at any run level.
+- The second method, found in the NetworkManager and init-ifupdown bbappend files, uses an anonymous Python function to set the desired run levels, if the condition is TRUE. Otherwise, if FALSE, the previously assigned run levels (of which one does not have to be aware) are used.
+   - The beauty of this method, as stated above, is that one does not have to be aware of what 
+     the default configured run levels are.
+
+To disable the automatic startup of the aforementioned services, add the following line(s)
+to your Yocto project's local.conf
+
+# To disable Bluetooth
+MCS_BLUETOOTH_NO_START = "1"
+
+# To disable DropBear
+MCS_DROPBEAR_NOSTART = "1"
+
+# To disable NetworkManager
+MCS_NETWORKMANAGER_NO_START = "1"
