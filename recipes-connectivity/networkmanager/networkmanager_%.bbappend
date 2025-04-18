@@ -4,7 +4,7 @@
 #
 # In this example we are using an anonymous python function
 
-EXTRA_OECONF_append = " --disable-introspection"
+EXTRA_OECONF:append = " --disable-introspection"
 
 python() {
    var_value = d.getVar('MCS_NETWORKMANAGER_NO_START', True)

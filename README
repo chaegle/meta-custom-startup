@@ -73,7 +73,7 @@ do NOT get started at boot in run levels 3, 4 & 5.
 Within these bbappend files a couple of method for conditionally implementing the change(s)
 have been implemented.
 
-- In the BlueTooth and DropBear bbappend files a @base_conditional comparison is made. If TRUE
+- In the Bluetooth and DropBear bbappend files a @oe-utils.conditional comparison is made. If TRUE
   the service is not installed in run levels 3, 4 & 5. 
    - The 'problem' in using this method, is that one must define a FALSE condition. Failing to do 
      so will result on the specified service script not being installed at any run level.
